@@ -2,252 +2,182 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Do You Like Me?</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Birthday Priya</title>
   <style>
     body {
-      background-color: #fff0f5;
-      font-family: 'Segoe UI', sans-serif;
-      text-align: center;
-      overflow: hidden;
       margin: 0;
-      padding: 0;
+      font-family: system-ui, sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       height: 100vh;
-      position: relative;
-    }
-
-    .title {
-      font-size: 36px;
-      color: #d63384;
-      margin-top: 60px;
-      height: 50px;
-    }
-
-    .typewriter {
-      display: inline-block;
-      border-right: 2px solid #d63384;
-      white-space: nowrap;
       overflow: hidden;
-      animation: typing 4s steps(40, end), blink 0.75s step-end infinite;
     }
-
-    @keyframes typing {
-      from { width: 0 }
-      to { width: 100% }
-    }
-
-    @keyframes blink {
-      50% { border-color: transparent }
-    }
-
-    .image-container {
-      margin-top: 40px;
-    }
-
-    .image-container img {
-      width: 200px;
-      border-radius: 20px;
-    }
-
-    .buttons {
-      margin-top: 40px;
-      position: relative;
-      height: 200px;
-    }
-
-    button {
-      padding: 15px 30px;
-      font-size: 18px;
-      margin: 20px;
-      border: none;
-      border-radius: 10px;
+    .gift-img {
+      width: 180px;
       cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
+      transition: transform .2s ease;
+      z-index: 10;
     }
-
-    #yes {
-      background-color: #ff69b4;
-      color: white;
-      position: relative;
+    .gift-img:active {
+      transform: scale(0.95);
     }
-
-    #no {
-      background-color: #999;
-      color: white;
-      position: fixed; /* Changed to fixed for better control */
-      top: 300px; /* Initial position */
-      left: calc(50% + 70px); /* Near center, right side */
-      transition: left 0.3s ease, top 0.3s ease;
-    }
-
-    #message {
-      margin-top: 20px;
-      font-size: 24px;
-      font-weight: bold;
-      color: #c2185b;
-      font-family: 'Comic Sans MS', cursive;
-      animation: none;
-      min-height: 35px;
-    }
-
-    #warning {
-      margin-top: 20px;
-      font-size: 20px;
-      font-weight: bold;
-      color: #d00000;
-      font-family: 'Comic Sans MS', cursive;
-      animation: none;
-      min-height: 28px;
-    }
-
-    @keyframes pop {
-      0% { transform: scale(0.5); opacity: 0; }
-      50% { transform: scale(1.1); opacity: 1; }
-      100% { transform: scale(1); }
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      50% { transform: translateX(5px); }
-      75% { transform: translateX(-5px); }
-    }
-
-    .shake {
-      animation: shake 0.5s infinite;
-    }
-
-    /* 💖 Heart Animation */
-    .heart {
+    .balloons {
       position: fixed;
-      width: 20px;
-      height: 20px;
-      background-color: red;
-      transform: rotate(45deg);
-      animation: fall 5s linear infinite;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       pointer-events: none;
-      z-index: 9999;
+      overflow: hidden;
+      z-index: 5;
     }
-
-    .heart::before,
-    .heart::after {
-      content: '';
+    .balloon {
       position: absolute;
-      width: 20px;
-      height: 20px;
-      background-color: red;
+      bottom: -150px;
       border-radius: 50%;
+      animation: floatUp linear forwards;
     }
-
-    .heart::before {
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-120vh) scale(1.05); opacity: 0; }
+    }
+    .overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      animation: fadeIn 1s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .overlay.show { display: flex; }
+    .gif-box img {
+      max-width: 400px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.5);
+      cursor: pointer;
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 2rem;
+      color: #fff;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+    }
+    .close-btn {
+      position: absolute; top: 20px; right: 20px;
+      font-size: 2rem; color: #fff;
+      background: none; border: none; cursor: pointer;
+    }
+    .confetti {
+      position: fixed;
       top: -10px;
-      left: 0;
+      width: 10px;
+      height: 20px;
+      background: red;
+      opacity: 0.8;
+      animation: fall linear forwards;
+      z-index: 1;
     }
-
-    .heart::after {
-      left: -10px;
-      top: 0;
-    }
-
     @keyframes fall {
-      0% { top: -10%; opacity: 1; }
-      100% { top: 110%; opacity: 0; }
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(110vh) rotate(360deg); }
     }
   </style>
 </head>
 <body>
+  <!-- 🎁 Gift Box -->
+  <img class="gift-img" id="gift" src="https://media0.giphy.com/media/vYUWWJty4qIdW/giphy.gif" alt="Gift Box Animation">
 
-  <!-- ✨ Animated Title with Name -->
-  <div class="title">
-    <div class="typewriter">Do you like pallavi, ?  💞</div>
+  <!-- 🎈 Balloons -->
+  <div class="balloons" id="balloons"></div>
+
+  <!-- 🎂 Cake Overlay -->
+  <div class="overlay" id="overlay">
+    <button class="close-btn" id="closeBtn">✕</button>
+    <div class="gif-box">
+      <img id="birthdayGif" src="https://i.pinimg.com/originals/f0/33/0b/f0330b49e399d0ecb9616c9cc8131de9.gif" alt="Birthday Cake GIF">
+    </div>
+    <div class="message">Happy Birthday Priya Mam 🎉</div>
   </div>
 
-  <!-- Cute Image -->
-  
+  <!-- 🎶 Birthday Song -->
+  <audio id="birthdaySong" preload="auto">
+    <source src="https://www2.cs.uic.edu/~i101/SoundFiles/HappyBirthdaySong.mp3" type="audio/mpeg">
+  </audio>
 
-  <!-- Buttons -->
-  <div class="buttons">
-    <button id="yes">Yes 💖</button>
-    <button id="no">No 😢</button>
-  </div>
+<script>
+  const gift = document.getElementById('gift');
+  const balloons = document.getElementById('balloons');
+  const overlay = document.getElementById('overlay');
+  const closeBtn = document.getElementById('closeBtn');
+  const birthdayGif = document.getElementById('birthdayGif');
+  const song = document.getElementById('birthdaySong');
+  let opened = false;
+  let changedToDance = false;
 
-  <!-- Messages -->
-  <div id="message"></div>
-  <div id="warning"></div>
-
-  <script>
-    const noBtn = document.getElementById('no');
-    const yesBtn = document.getElementById('yes');
-    const msg = document.getElementById('message');
-    const warning = document.getElementById('warning');
-
-    let noClickCount = 0;
-
-    // No button moves only after 5th click onwards
-    noBtn.addEventListener('mouseover', () => {
-      if (noClickCount >= 5) {
-        const btnWidth = noBtn.offsetWidth;
-        const btnHeight = noBtn.offsetHeight;
-        const maxX = window.innerWidth - btnWidth - 20;
-        const maxY = window.innerHeight - btnHeight - 20;
-
-        const x = Math.floor(Math.random() * maxX);
-        const y = Math.floor(Math.random() * maxY);
-
-        noBtn.style.left = x + 'px';
-        noBtn.style.top = y + 'px';
-      }
-    });
-
-    yesBtn.addEventListener('click', () => {
-      msg.innerText = "Awww! Like you too! 💕💍";
-      msg.style.animation = "none";
-      msg.offsetHeight; // trigger reflow
-      msg.style.animation = "pop 0.4s ease";
-
-      warning.innerText = "";
-      warning.classList.remove('shake');
-
-      startHearts();
-    });
-
-    noBtn.addEventListener('click', () => {
-      noClickCount++;
-
-      if (noClickCount === 1) {
-        msg.innerText = "Please think again 🙏";
-        warning.innerText = "";
-        warning.classList.remove('shake');
-      } else if (noClickCount === 2) {
-        msg.innerText = "Ek aur baar soch lo! 🤔";
-      } else if (noClickCount === 3) {
-        msg.innerText = "Baby maan jao na 😢";
-      } else if (noClickCount === 4) {
-        msg.innerText = "Kitna bhav khaogi 😩";
-      } else {
-        msg.innerText = "";
-        warning.innerText = "⚠️ Ab toh haan kar do warna dil toot jayega!";
-        warning.classList.add('shake');
-      }
-
-      // Animate message
-      msg.style.animation = "none";
-      msg.offsetHeight;
-      msg.style.animation = "pop 0.4s ease";
-    });
-
-    function startHearts() {
-      setInterval(() => {
-        const heart = document.createElement("div");
-        heart.className = "heart";
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.animationDuration = 3 + Math.random() * 2 + "s";
-        document.body.appendChild(heart);
-        setTimeout(() => {
-          heart.remove();
-        }, 5000);
-      }, 200);
+  // 🎈 Balloons
+  function spawnBalloons(count=6){
+    for(let i=0;i<count;i++){
+      const b = document.createElement('div');
+      b.className = 'balloon';
+      const size = 30 + Math.random()*40;
+      b.style.width = size + 'px';
+      b.style.height = size + 'px';
+      b.style.left = (Math.random()*90)+'%';
+      b.style.background = `hsl(${Math.random()*360},70%,60%)`;
+      b.style.animationDuration = (6 + Math.random()*4)+'s';
+      balloons.appendChild(b);
+      setTimeout(()=> b.remove(), 11000);
     }
-  </script>
+  }
+
+  // 🎁 Gift open sequence
+  function openSequence(){
+    if (opened) return;
+    opened = true;
+
+    // ✅ play song directly on click (allowed)
+    song.play().catch(err => console.log("Autoplay blocked:", err));
+
+    spawnBalloons(8);
+    setInterval(()=> spawnBalloons(6), 1200);
+    setTimeout(()=> overlay.classList.add('show'), 1000);
+  }
+
+  // ❌ Close overlay
+  function hideOverlay(){
+    overlay.classList.remove('show');
+    song.pause();
+    song.currentTime = 0;
+  }
+
+  // 🎂 Change Cake GIF → Dance GIF
+  function changeToDance(){
+    if (changedToDance) return;
+    birthdayGif.src = "https://i.pinimg.com/originals/76/fc/08/76fc086b09b86f1d93a5512fca14b88e.gif";
+    changedToDance = true;
+  }
+
+  gift.addEventListener('click', openSequence);
+  closeBtn.addEventListener('click', hideOverlay);
+  birthdayGif.addEventListener('click', changeToDance);
+
+  // 🎊 Confetti Patti Always
+  function spawnConfetti(){
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.background = `hsl(${Math.random()*360},70%,60%)`;
+    c.style.animationDuration = (3 + Math.random()*3)+'s';
+    c.style.width = (5 + Math.random()*8) + 'px';
+    c.style.height = (10 + Math.random()*15) + 'px';
+    document.body.appendChild(c);
+    setTimeout(()=> c.remove(), 7000);
+  }
+  setInterval(spawnConfetti, 150);
+</script>
 </body>
 </html>
